@@ -1,10 +1,13 @@
+
+
 {
   "name": "servicos",
   "version": "1.0.0",
   "description": "api de servicos",
-  "main": "servicos.js",
+  "main": "app.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
+
   },
   "author": "MFH",
   "license": "ISC",
