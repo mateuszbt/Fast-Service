@@ -1,0 +1,207 @@
+
+<html>
+    <head>
+		<meta charset="UTF-8">
+
+		<title>Portal de Serviços</title>
+		
+		<!-- JQuery -->
+		<script src="js/jquery-2.2.1.js"></script>
+
+		<!-- bootstrap - link cdn -->
+		<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" integrity="sha384-1q8mTJOASx8j1Au+a5WDVnPi2lkFfwwEAa8hDDdjZlpLegxhjVME1fgjWPGmkzs7" crossorigin="anonymous">
+	
+		<!-- incluindo css -->
+		<link href="css/style.css" rel="stylesheet">
+
+		<!-- favicon -->
+        <link rel="shortcut icon" href="images/favicon.ico" />
+        
+        <script src="https://www.gstatic.com/firebasejs/5.0.3/firebase.js"></script>
+
+        <script type="text/javascript">
+            window.onload = function(){
+                tipoPessoaSel(1);
+            }
+            </script>
+	</head>
+
+    
+
+    <body style="background-color: #e9e9e9;background-position:center;  background-image: url(images/servicosFundoc.png);
+	background-repeat: no-repeat;" >
+
+            
+            
+           
+
+        <div class="col-md-4" style="left:35%; position: absolute; ">
+                <center> <img src="images/logo.png"   height="20%"/><br></center>
+                <h1 class="text-center">Fast Service</h1>
+                     
+            <br>
+
+            <form id="form" onchange="exibir_ocultar()">
+                <input type='radio' checked="checked" name='tipousuario' onload="tipoPessoaSel()" onclick="tipoPessoaSel();"  id='empresa'> empresa
+                <input type='radio' name='tipousuario' onclick="tipoPessoaSel();" id='usuario'> Usuario
+               
+           </form>
+
+           
+
+           <script>
+               function tipoPessoaSel() {
+                         var escolha = document.getElementById("usuario").checked;
+                         if (escolha) {
+                            document.getElementById("authGoogleButton").style.display = "block";
+                            document.getElementById("emailInput").style.display = "none";
+                            document.getElementById("passwordInput").style.display = "none";
+                            document.getElementById("authEmailPassButton").style.display = "none";
+                            document.getElementById("createUserButton").style.display = "none";
+                            document.getElementById("labelEmail").style.display = "none";
+                            document.getElementById("labelSenha").style.display = "none";
+
+                         } else {
+                            document.getElementById("authGoogleButton").style.display = "none";
+                            document.getElementById("emailInput").style.display = "block";
+                            document.getElementById("passwordInput").style.display = "block";
+                            document.getElementById("authEmailPassButton").style.display = "block";
+                            document.getElementById("createUserButton").style.display = "block";
+                            document.getElementById("labelEmail").style.display = "block";
+                            document.getElementById("labelSenha").style.display = "block";
+                        }
+                    }
+           </script>
+            <form id="formDeSubmit" accept-charset="UTF-8" role="form" class="form-signin" action="/home" method="post"  >
+                
+                    
+            <fieldset>
+                
+                    <label class="panel-login" id="labelEmail">E-mail</label>
+                    <input type="text" class="form-control" id="emailInput" name="emailInput" placeholder="E-mail">
+                    <br>
+                    <label class="panel-login" id="labelSenha">Senha</label>
+                    <input type="password" class="form-control" id="passwordInput" name="passwordInput" placeholder="Senha">
+                   
+            </fieldset>
+        </form>
+    
+            
+        <button class="btn btn-lg btn-block btn-primary" id="authEmailPassButton">Log in</button><br>
+        <button class="btn btn-lg btn-block btn-primary" id="createUserButton">Criar nova conta</button><br>
+        <button class="btn btn-lg btn-block btn-danger"  id="authGoogleButton">Log in com Gmail</button>
+            
+            <br>
+            
+           
+        </div>
+
+    
+   
+
+
+
+
+
+        
+       
+        </script>
+    <script src="http://code.jquery.com/jquery-2.2.4.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js" integrity="sha384-0mSbJDEHialfmuBBQP6A4Qrprq5OVfW37PRR3j5ELqxss1yVqOtnepnHVP9aJ7xS" crossorigin="anonymous"></script>
+    
+
+    
+
+    
+
+    
+    </body>
+    
+
+<script>
+
+// Initialize Firebase
+var config = {
+    apiKey: "AIzaSyAShnQsNUa53pnxpdTEzCjn6-fb-4nfCls",
+    authDomain: "autenticacaoservico.firebaseapp.com",
+    databaseURL: "https://autenticacaoservico.firebaseio.com",
+    projectId: "autenticacaoservico",
+    storageBucket: "autenticacaoservico.appspot.com",
+    messagingSenderId: "322185229541"
+  };
+  firebase.initializeApp(config);
+
+</script>
+
+
+
+<script>
+
+var authEmailPassButton = document.getElementById('authEmailPassButton');
+var logOutButton = document.getElementById('logOutButton');
+var authGmailButton = document.getElementById('authGmailButton');
+
+var emailInput = document.getElementById('emailInput');
+var passwordInput = document.getElementById('passwordInput');
+
+
+
+
+
+
+
+
+
+
+authEmailPassButton.addEventListener('click', function(){   
+    firebase
+        .auth()
+        .signInWithEmailAndPassword(emailInput.value, passwordInput.value)
+        .then(function(result){
+            console.log(result);
+
+           document.getElementById("formDeSubmit").submit();
+            
+           
+        })
+        .catch(function(error){
+            console.error(error.code);
+            console.error(error.message);
+            alert('Falha ao autenticar');
+        });
+});
+
+
+createUserButton.addEventListener('click', function(){
+    
+    window.location.href = "/novaconta"; 
+
+});
+
+
+
+authGoogleButton.addEventListener('click', function () {
+    // Providers
+    var provider = new firebase.auth.GoogleAuthProvider();
+    signIn(provider);
+   
+});
+
+function signIn(provider) {
+    firebase.auth()
+        .signInWithPopup(provider)
+        .then(function (result) {
+            console.log(result);
+            var token = result.credential.accessToken;
+            
+            document.getElementById("formDeSubmit").submit();
+            
+        }).catch(function (error) {
+            console.log(error);
+            alert('Falha na autenticação');
+        });
+}
+</script>
+
+
+</html>
